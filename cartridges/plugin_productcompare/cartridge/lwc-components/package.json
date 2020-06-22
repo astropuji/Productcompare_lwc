@@ -1,0 +1,71 @@
+{
+    "name": "lwc-components",
+    "description": "LWC Component Library",
+    "version": "0.0.0",
+    "author": "Philippe Riand",
+    "bugs": "https://github.com/priansf/lwc-sfra-cartridge/issues",
+    "dependencies": {
+        "express": "~4.16.3",
+        "useragent": "~2.3.0"
+    },
+    "devDependencies": {
+        "@lwc/compiler": "1.1.0",
+        "@lwc/engine": "1.1.0",
+        "@lwc/jest-preset": "2.2.0",
+        "@lwc/rollup-plugin": "1.1.0",
+        "@lwc/synthetic-shadow": "1.1.0",
+        "@salesforce/eslint-config-lwc": "~0.3.0",
+        "@wdio/cli": "~5.9.3",
+        "@wdio/local-runner": "~5.9.3",
+        "@wdio/mocha-framework": "~5.9.3",
+        "@wdio/selenium-standalone-service": "~5.9.3",
+        "@wdio/spec-reporter": "~5.9.3",
+        "@wdio/sync": "~5.9.3",
+        "babel-eslint": "^10.1.0",
+        "concurrently": "~4.0.1",
+        "cross-env": "^6.0.3",
+        "eslint": "^5.10.0",
+        "jest": "~24.8.0",
+        "lint-staged": "^9.5.0",
+        "npm-run-all": "^4.1.5",
+        "rollup": "~0.66.6",
+        "rollup-plugin-compat": "0.21.5",
+        "rollup-plugin-copy": "^3.3.0",
+        "rollup-plugin-replace": "~2.1.0",
+        "rollup-plugin-terser": "^3.0.0"
+    },
+    "engines": {
+        "node": ">=10.13.0",
+        "npm": ">=6.4.1",
+        "yarn": ">=1.9.4"
+    },
+    "homepage": "https://github.com/priansf/lwc-sfra-cartridge",
+    "keywords": [
+        "lwc"
+    ],
+    "license": "MIT",
+    "lint-staged": {
+        "**/*.{css,html,js,json,md,ts,yaml,yml}": [
+            "prettier --write"
+        ],
+        "./src/**/*.js": [
+            "eslint"
+        ],
+        "*": [
+            "git add"
+        ]
+    },
+    "repository": "priansf/lwc-sfra-cartridge",
+    "scripts": {
+        "build": "cross-env rollup -c ./scripts/rollup.config.js;",
+        "build:production": "cross-env NODE_ENV=production rollup -c ./scripts/rollup.config.js",
+        "lint": "eslint ./src/**/*.js",
+        "prettier": "prettier --write '**/*.{css,html,js,json,md,ts,yaml,yml}'",
+        "prettier:verify": "prettier --list-different '**/*.{css,html,js,json,md,ts,yaml,yml}'",
+        "serve": "node index.js",
+        "start": "concurrently --kill-others \"yarn build --watch\" \"yarn serve\"",
+        "test": "yarn test:unit && yarn test:integration",
+        "test:integration": "wdio ./scripts/wdio.conf.js",
+        "test:unit": "jest"
+    }
+}

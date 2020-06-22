@@ -1,0 +1,6 @@
+cartridges/**/cartridge/static/
+cartridges/plugin_productcompare/cartridge/
+coverage/
+doc/
+bin/
+tmp/
