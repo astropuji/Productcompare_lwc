@@ -1,4 +1,61 @@
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, track, api, wire } from 'lwc';
+
+import { setClient, getClient } from '@lwce/apollo-client';
+
+import { 
+    useQuery, 
+    // useMutation
+} from '@lwce/apollo-client';
+
+import {
+    ApolloClient,
+    ApolloLink,
+    InMemoryCache,
+    HttpLink,
+} from 'apollo-boost';
+
+const httpLink = new HttpLink({
+    uri: 'https://swapi.graph.cool/'
+});
+
+const authLink = new ApolloLink((operation, forward) => {
+    // Call the next link in the middleware chain.
+    return forward(operation);
+});
+
+const defaultOptions = {
+    watchQuery: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'all',
+    },
+    query: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'all',
+    },
+};
+
+const client = new ApolloClient({
+    uri: 'https://swapi.graph.cool/',
+    link: authLink.concat(httpLink), // Chain it with the HttpLink
+    cache: new InMemoryCache(),
+    defaultOptions: defaultOptions,
+});
+
+console.log("BEFORE getClient", getClient())
+console.log("BEFORE useQuery", useQuery)
+setClient(client);
+console.log("AFTER getClient", getClient())
+console.log("AFTER useQuery", useQuery)
+
+import gql from 'graphql-tag';
+
+const QUERY = gql`
+    {
+        allFilms {
+            title
+        }
+    }
+`
 
 const greetings = [
     'Hello',
@@ -13,20 +70,33 @@ const greetings = [
     'नमस्ते',
     '안녕하세요'
 ];
+
 const SPEED_CLASS_MAP = {
     slow: 'fade-slow',
     fast: 'fade-fast',
     medium: 'fade-medium'
 };
+
 const DEFAULT_SPEED = 'medium';
 
 export default class Greeting extends LightningElement {
+
+    @wire(useQuery, {
+        query: QUERY,
+        lazy: false,
+        variables: '$variables',
+    }) results;
+
+    get firstResult() {
+        console.log(this.results);
+        return this.results.loading ? "" : this.results.data.allFilms[0].title;
+    }
+
     @track animationSpeed = DEFAULT_SPEED;
     @track index = 0;
     @track isAnimating = true;
 
     _message;
-
     @api
     set speed(value) {
         if (SPEED_CLASS_MAP.hasOwnProperty(value)) {

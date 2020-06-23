@@ -11,7 +11,8 @@
     "uploadCartridge": "sgmf-scripts --uploadCartridge plugin_productcompare",
     "compile:js": "sgmf-scripts --compile js",
     "compile:scss": "sgmf-scripts --compile css",
-    "compile:lwc": "cd cartridges/plugin_productcompare/cartridge/lwc-components/ && yarn build && cd ..",
+    "copy:lwc": "copyfiles -f cartridges/plugin_productcompare/cartridge/lwc-components/public/js/*.min.js cartridges/plugin_productcompare/cartridge/static/default/js",
+    "compile:lwc": "cd cartridges/plugin_productcompare/cartridge/lwc-components/ && yarn build:production && cd ../../../.. && npm run copy:lwc",
     "build": "npm run compile:js && npm run compile:scss && npm run compile:lwc",
     "watch": "sgmf-scripts --watch",
     "watch:static": "sgmf-scripts --watch static"
@@ -21,9 +22,6 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "css-loader": "^0.28.11",
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb-base": "^5.0.3",
-    "eslint-plugin-import": "^1.16.0",
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
     "node-sass": "^4.12.0",
@@ -44,7 +42,58 @@
     "rollup-plugin-compat": "0.21.5",
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-replace": "~2.1.0",
-    "rollup-plugin-terser": "^3.0.0"
+    "rollup-plugin-terser": "^3.0.0",
+    "@babel/core": "^7.6.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/preset-env": "^7.6.3",
+    "@tridnguyen/config": "^2.3.1",
+    "@wdio/sauce-service": "^5.14.0",
+    "@wdio/selenium-standalone-service": "^5.13.2",
+    "allure-commandline": "^2.13.0",
+    "appium": "^1.15.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.6",
+    "babel-preset-env": "^1.7.0",
+    "chai-subset": "^1.6.0",
+    "chalk": "^1.1.3",
+    "cheerio": "0.22.0",
+    "cldr-data": "^32.0.1",
+    "codeceptjs": "^2.3.2",
+    "codeceptjs-cucumber": "^2.0.10",
+    "codeceptjs-saucehelper": "^1.4.0",
+    "codeceptjs-saucelabs": "^2.0.6",
+    "codeceptjs-shared": "^2.0.6",
+    "copyfiles": "^2.1.1",
+    "debug": "^4.1.1",
+    "deepmerge": "^3.3.0",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^5.0.3",
+    "eslint-plugin-import": "^1.16.0",
+    "eslint-plugin-sitegenesis": "~1.0.0",
+    "globalize": "^1.4.2",
+    "husky": "^4.2.5",
+    "lodash": "^4.17.15",
+    "minimist": "^1.2.0",
+    "mocha-junit-reporter": "^1.23.1",
+    "moment-timezone": "^0.5.26",
+    "properties-parser": "^0.3.1",
+    "request-promise": "^4.2.4",
+    "selenium-standalone": "^6.16.0",
+    "shelljs": "^0.8.3",
+    "should": "^13.2.3",
+    "style-loader": "^0.21.0",
+    "url": "^0.11.0",
+    "wdio-mocha-framework": "^0.6.4",
+    "wdio-sauce-service": "^0.4.14",
+    "webdriverio": "^5.14.5",
+    "xml2js": "^0.4.22"
+  },
+  "dependencies": {
+    "bootstrap": "4.3.1",
+    "cleave.js": "^1.5.3",
+    "flag-icon-css": "^2.9.0",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.5.0"
   },
   "browserslist": [
     "last 2 versions",
@@ -52,5 +101,16 @@
   ],
   "paths": {
     "base": "../storefront-reference-architecture/cartridges/app_storefront_base/"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run test"
+    }
   }
 }

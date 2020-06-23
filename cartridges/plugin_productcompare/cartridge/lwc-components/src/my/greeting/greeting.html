@@ -1,5 +1,15 @@
 <template>
     <div class={animationClass} onanimationend={handleAnimationEnd}>
         <span class="greet">{greeting} {message}</span>
+        <h1>Data below: </h1>
+        <template if:true={results.loading}>
+            Loading....
+          </template>
+          <template if:true={results.error}>
+            Man, there is an error {results.error}
+          </template>
+        <template if:true={results.data}>
+            Here is the data: {firstResult}
+        </template>
     </div>
 </template>

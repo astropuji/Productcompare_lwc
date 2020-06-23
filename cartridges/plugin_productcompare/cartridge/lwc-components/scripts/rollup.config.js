@@ -10,6 +10,9 @@ const compat = require('rollup-plugin-compat');
 const { terser } = require('rollup-plugin-terser');
 const syntheticShadow = require('./synthetic-shadow');
 
+const resolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
+
 const env = process.env.NODE_ENV || 'development';
 
 const input = path.resolve(__dirname, '../src/main.js');
@@ -24,13 +27,24 @@ function rollupConfig({ target }) {
         output: {
             file: path.join(outputDir, (isCompat ? 'lwc-components-compat' : 'lwc-components') + (isProduction ? ".min.js" : ".js")),
             format: 'iife',
+            sourcemap: true,
         },
         plugins: [
+            resolve(),
             isCompat && syntheticShadow(),
-            lwcCompiler(),
+            lwcCompiler({
+                exclude: [
+                    '**/*.mjs',
+                    '../../../node_modules/**/*.mjs',
+                    '../../node_modules/**/*.mjs',
+                    '../node_modules/**/*.mjs',
+                ],
+                sourcemap: true,
+            }),
+            commonjs(),
             replace({ 'process.env.NODE_ENV': JSON.stringify(env) }),
             isCompat && compat(),
-            isProduction && terser()
+            isProduction && terser(),,
         ].filter(Boolean)
     }
 }

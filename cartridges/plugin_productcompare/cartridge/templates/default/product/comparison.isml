@@ -32,16 +32,24 @@
         </isif>
     </div>
 
- <body>
-  <h1>Your First LWC Component is Ready</h1>
-  <div id="main"></div>
-  <script src="/static/js/{{js_bundle}}.js"></script>
-  <script>
-    var container = document.getElementById("main");
-    var element = createLwcComponent("my-greeting");
-    element.message = "message","LWC Component";
-    container.appendChild(element);
-  </script>
-</body>
-</isdecorate>
+<isscript>
+        var assets = require('*/cartridge/scripts/assets');
+        assets.addJs(pdict.lwcCompat ?  '/js/lwc-components-compat.min.js' : '/js/lwc-components.min.js');
+    </isscript>
 
+    <div class="home-main homepage">
+        <h1>Apollo Client Query</h1>
+        <div id="hello-world"></div>
+    </div>
+    
+    <script>
+        // The LWC script is loaded with the 'defer' attribute, so we have to create the component on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            var container = document.getElementById('hello-world');
+            var element = createLwcComponent('my-greeting');
+            element.message = "LWC Component";
+            container.appendChild(element);
+        });
+    </script>
+
+</isdecorate>

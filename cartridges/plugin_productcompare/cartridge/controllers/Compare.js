@@ -5,9 +5,7 @@ var server = require('server');
 var cache = require('*/cartridge/scripts/middleware/cache');
 var productFactory = require('*/cartridge/scripts/factories/product');
 var CompareAttributesModel = require('*/cartridge/models/compareAttributes');
-var isCompat = require('./../scripts/util/lwcCompat');
-
-
+var isCompat = require('./../util/lwcCompat');
 server.get('Show', cache.applyDefaultCache, function (req, res, next) {
     var compareProductsForm = req.querystring;
     var category = CatalogMgr.getCategory(compareProductsForm.cgid);
@@ -26,11 +24,10 @@ server.get('Show', cache.applyDefaultCache, function (req, res, next) {
         pids: pids,
         attributes: (new CompareAttributesModel(products)).slice(0)
     });
-
     var lwcCompat = isCompat();
 
     // Render as a Web Component
-    if (false && !lwcCompat) {
+if (false && !lwcCompat) {
         // Full web component rendering
     res.render('/hello/helloWorld-wc');
     next();
