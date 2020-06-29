@@ -6,6 +6,7 @@ var cache = require('*/cartridge/scripts/middleware/cache');
 var productFactory = require('*/cartridge/scripts/factories/product');
 var CompareAttributesModel = require('*/cartridge/models/compareAttributes');
 var isCompat = require('./../util/lwcCompat');
+
 server.get('Show', cache.applyDefaultCache, function (req, res, next) {
     var compareProductsForm = req.querystring;
     var category = CatalogMgr.getCategory(compareProductsForm.cgid);

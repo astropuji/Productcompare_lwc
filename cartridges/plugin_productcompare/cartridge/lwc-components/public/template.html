@@ -32,9 +32,14 @@
   <div id="main"></div>
   <script src="/static/js/{{js_bundle}}.js"></script>
   <script>
+    window.onload = function() {
+      strToArr();
+  }
+  </script>
+  <script>
     var container = document.getElementById("main");
     var element = createLwcComponent("my-greeting");
-    element.message = "message","LWC Component";
+    element.pid = '[25696638M, 25697639M, 25696717M]';
     container.appendChild(element);
   </script>
 </body>

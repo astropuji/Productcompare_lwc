@@ -8,7 +8,7 @@ const useragent = require('useragent');
 const template  = fs.readFileSync(path.join(__dirname, 'public/template.html'), 'utf8');
 const templateWc  = fs.readFileSync(path.join(__dirname, 'public/template-wc.html'), 'utf8');
 const log = process.stdout.write.bind(process.stdout);
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 const app = express();
 
 // -- Helpers ---------------------------------------------------------------------------

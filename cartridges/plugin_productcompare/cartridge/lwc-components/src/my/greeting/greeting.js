@@ -2,10 +2,7 @@ import { LightningElement, track, api, wire } from 'lwc';
 
 import { setClient, getClient } from '@lwce/apollo-client';
 
-import { 
-    useQuery, 
-    // useMutation
-} from '@lwce/apollo-client';
+import { useQuery } from '@lwce/apollo-client';
 
 import {
     ApolloClient,
@@ -13,9 +10,10 @@ import {
     InMemoryCache,
     HttpLink,
 } from 'apollo-boost';
+import gql from 'graphql-tag';
 
 const httpLink = new HttpLink({
-    uri: 'https://swapi.graph.cool/'
+    uri: 'https://safe-brushlands-35946.herokuapp.com//'
 });
 
 const authLink = new ApolloLink((operation, forward) => {
@@ -35,51 +33,59 @@ const defaultOptions = {
 };
 
 const client = new ApolloClient({
-    uri: 'https://swapi.graph.cool/',
+    uri: 'https://safe-brushlands-35946.herokuapp.com/',
     link: authLink.concat(httpLink), // Chain it with the HttpLink
     cache: new InMemoryCache(),
     defaultOptions: defaultOptions,
 });
 
-console.log("BEFORE getClient", getClient())
-console.log("BEFORE useQuery", useQuery)
-setClient(client);
-console.log("AFTER getClient", getClient())
-console.log("AFTER useQuery", useQuery)
-
-import gql from 'graphql-tag';
-
 const QUERY = gql`
-    {
-        allFilms {
-            title
+    query($pidList: [String]) {
+        multipleProducts(pidList: $pidList) {
+            id
+            name
         }
     }
 `
 
-const greetings = [
-    'Hello',
-    'Bonjour',
-    '你好',
-    'Hola',
-    'Привет',
-    'こんにちは',
-    'Guten Tag',
-    'ጤና ይስጥልኝ',
-    'Ciao',
-    'नमस्ते',
-    '안녕하세요'
-];
-
-const SPEED_CLASS_MAP = {
-    slow: 'fade-slow',
-    fast: 'fade-fast',
-    medium: 'fade-medium'
-};
-
-const DEFAULT_SPEED = 'medium';
-
 export default class Greeting extends LightningElement {
+
+    @api
+    set pid(val) {
+        var temp = this.strToArr(val);
+        console.log("inside set pid, pidList:", temp);
+        this.variables = { ...this.variables, pidList: temp };
+    }
+
+    get pid() {
+        return this.variables.pidList;
+    }
+
+    strToArr(val){
+        console.log("inside strToArr function" );
+            var pidStr = val;
+            console.log("inside strToArr pid: ",pidStr);
+            let pidSlice = pidStr.slice(1, (pidStr.length-1));
+            let pidList = pidSlice.split(",");
+            for (var i = 0; i < pidList.length; i++) {
+                pidList[i] = pidList[i].trim()
+            }
+            console.log("inside strToArr pidList: ",pidList[1]);
+            return pidList;
+            //this.pidList( this.pidList);
+        };
+
+        connectedCallback() {
+            this.results.fetch({ 
+                variables: {
+                    ... this.variables
+                }
+            })
+        }
+
+    variables = {
+        pidList: '' //["25696638M", "25697639M", "25696717M"]//this.pidList
+    };
 
     @wire(useQuery, {
         query: QUERY,
@@ -88,61 +94,9 @@ export default class Greeting extends LightningElement {
     }) results;
 
     get firstResult() {
-        console.log(this.results);
-        return this.results.loading ? "" : this.results.data.allFilms[0].title;
+       // console.log("value of pidList", this.pid());
+        console.log("inside firstResult: ", this.results);
+       return this.results.loading ? "" : this.results.data.multipleProducts[0].name;
     }
 
-    @track animationSpeed = DEFAULT_SPEED;
-    @track index = 0;
-    @track isAnimating = true;
-
-    _message;
-    @api
-    set speed(value) {
-        if (SPEED_CLASS_MAP.hasOwnProperty(value)) {
-            this.animationSpeed = value;
-        } else {
-            this.animationSpeed = DEFAULT_SPEED;
-        }
-        this.isAnimating = true;
-    }
-
-    @api
-    get message() {
-        return this._message || '';
-    }
-    set message(message) {
-        this._message = message;
-    }
-
-    // Return the internal speed property
-    get speed() {
-        return this.animationSpeed;
-    }
-
-    // Get the current greeting
-    get greeting() {
-        return greetings[this.index];
-    }
-
-    // Map slow, medium, fast to CSS Animations
-    get animationClass() {
-        if (this.isAnimating) {
-            return SPEED_CLASS_MAP[this.speed];
-        }
-        return 'hide';
-    }
-
-    //Handle the animation ending, update to next hello
-    handleAnimationEnd() {
-        this.isAnimating = false;
-        this.index = (this.index + 1) % greetings.length;
-
-        setTimeout(() => this.updateGreeting(), 500);
-    }
-
-    // Update to the next greeting and start animating
-    updateGreeting() {
-        this.isAnimating = true;
-    }
 }

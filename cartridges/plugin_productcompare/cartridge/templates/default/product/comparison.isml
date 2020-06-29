@@ -30,6 +30,7 @@
                 </isloop>
             </div>
         </isif>
+        <isset scope="request" name="pids" value="${pdict.pids}">
     </div>
 
 <isscript>
@@ -38,16 +39,16 @@
     </isscript>
 
     <div class="home-main homepage">
-        <h1>Apollo Client Query</h1>
         <div id="hello-world"></div>
     </div>
-    
+
     <script>
         // The LWC script is loaded with the 'defer' attribute, so we have to create the component on DOMContentLoaded
+        //console.log("pid value: ",'${pdict.pids}');
         document.addEventListener('DOMContentLoaded', function() {
             var container = document.getElementById('hello-world');
             var element = createLwcComponent('my-greeting');
-            element.message = "LWC Component";
+            element.pid = '${pdict.pids}';
             container.appendChild(element);
         });
     </script>
