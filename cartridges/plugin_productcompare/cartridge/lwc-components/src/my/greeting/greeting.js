@@ -1,43 +1,7 @@
 import { LightningElement, track, api, wire } from 'lwc';
-
-import { setClient, getClient } from '@lwce/apollo-client';
-
 import { useQuery } from '@lwce/apollo-client';
-
-import {
-    ApolloClient,
-    ApolloLink,
-    InMemoryCache,
-    HttpLink,
-} from 'apollo-boost';
 import gql from 'graphql-tag';
 
-const httpLink = new HttpLink({
-    uri: 'https://safe-brushlands-35946.herokuapp.com//'
-});
-
-const authLink = new ApolloLink((operation, forward) => {
-    // Call the next link in the middleware chain.
-    return forward(operation);
-});
-
-const defaultOptions = {
-    watchQuery: {
-        fetchPolicy: 'no-cache',
-        errorPolicy: 'all',
-    },
-    query: {
-        fetchPolicy: 'no-cache',
-        errorPolicy: 'all',
-    },
-};
-
-const client = new ApolloClient({
-    uri: 'https://safe-brushlands-35946.herokuapp.com/',
-    link: authLink.concat(httpLink), // Chain it with the HttpLink
-    cache: new InMemoryCache(),
-    defaultOptions: defaultOptions,
-});
 
 const QUERY = gql`
     query($pidList: [String]) {

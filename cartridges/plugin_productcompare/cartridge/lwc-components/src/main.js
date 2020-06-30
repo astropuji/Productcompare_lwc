@@ -8,6 +8,40 @@
 
 import { createElement, buildCustomElementConstructor } from "lwc";
 
+import {
+    ApolloClient,
+    ApolloLink,
+    InMemoryCache,
+    HttpLink,
+} from 'apollo-boost';
+import { setClient } from '@lwce/apollo-client';
+
+const httpLink = new HttpLink({
+    uri: 'https://safe-brushlands-35946.herokuapp.com//'
+});
+
+const authLink = new ApolloLink((operation, forward) => {
+    // Call the next link in the middleware chain.
+    return forward(operation);
+});
+
+const defaultOptions = {
+    watchQuery: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'all',
+    },
+    query: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'all',
+    },
+};
+
+setClient(new ApolloClient({
+    link: authLink.concat(httpLink), // Chain it with the HttpLink
+    cache: new InMemoryCache(),
+    defaultOptions: defaultOptions,
+}));
+
 // Components to export
 import Greeting from "my/greeting";
 
