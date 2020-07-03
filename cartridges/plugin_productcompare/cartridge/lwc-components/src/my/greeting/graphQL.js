@@ -41,7 +41,6 @@ query($pidList: [String]) {
                 }
                 pageDescription
                 pageTitle
-                primaryCategoryId
                 recommendations{
                 recommendedItemId
                 recommendedItemLink

@@ -40,8 +40,8 @@
 
     <div class="home-main homepage">
         <div id="hello-world"></div>
+        <div id="div1"></div>
     </div>
-
     <script>
         // The LWC script is loaded with the 'defer' attribute, so we have to create the component on DOMContentLoaded
         //console.log("pid value: ",'${pdict.pids}');

@@ -35,3 +35,16 @@
 .hide {
     opacity: 0;
 }
+
+.div1{
+margin:10px;font-size:1.25em;
+}
+
+.table{
+    border-collapse:collapse;border: 2px solid black;
+}
+
+.td{
+    border: 2px solid black;width:100px;height:100px;text-align:center;
+}
+
