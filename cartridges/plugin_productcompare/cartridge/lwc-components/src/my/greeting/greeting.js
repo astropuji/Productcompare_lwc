@@ -4,6 +4,8 @@ import QUERY from './graphQL';
 //import HashMap from 'dw/util/HashMap';
 export default class Greeting extends LightningElement {
 
+    isBundle = false;
+
     @api
     set pid(val) {
         var temp = this.strToArr(val);
@@ -24,7 +26,11 @@ export default class Greeting extends LightningElement {
             let pidSlice = pidStr.slice(1, (pidStr.length-1));
             let pidList = pidSlice.split(",");
             for (var i = 0; i < pidList.length; i++) {
-                pidList[i] = pidList[i].trim()
+                pidList[i] = pidList[i].trim();
+                var tempStr = pidList[i].toString();
+                if(tempStr.includes("bundle")){
+                    this.isBundle =  true;
+                }
             }
             console.log("inside strToArr pidList: ",pidList[1]);
             return pidList;
@@ -32,11 +38,11 @@ export default class Greeting extends LightningElement {
         };
 
         async  connectedCallback() {
-            this.results.fetch({
+            if(this.isBundle == false){this.results.fetch({
                 variables: {
                     ... this.variables
                 }
-            })
+            })}
         }
 
     variables = {
@@ -51,8 +57,10 @@ export default class Greeting extends LightningElement {
 
     get firstResult() {
        // console.log("value of pidList", this.pid());
+       if(this.isBundle == false){
         console.log("inside firstResult: ", this.results);
         return this.results.loading ? "" : this.results.data.multipleProducts;
+       }
     }
     productArr(){
         var multiProd = this.results.data.multipleProducts;
@@ -75,7 +83,7 @@ export default class Greeting extends LightningElement {
                 row.style = "border: 1px solid black;";
                 var cell = document.createElement("td");
                 var cellText = document.createTextNode(this.attributes[r]);
-                cell.style = "border: 1px solid black;width:100px;height:50px;text-align:center;";
+                cell.style = "border: 1px solid black;width:50px;height:50px;text-align:center;";
                 cell.appendChild(cellText);
                 row.appendChild(cell);
             for (var c = 1; c <= cellsInRow; c++) {

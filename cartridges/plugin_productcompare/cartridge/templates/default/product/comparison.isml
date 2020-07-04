@@ -9,7 +9,6 @@
         <isif condition="${pdict.category.imgUrl}">
             style="background-image: url(${pdict.category.imgUrl})"
         </isif>
-    >
         <h1 class="header page-title">${pdict.category.name}</h1>
     </div>
 
@@ -19,9 +18,9 @@
                 <button class="btn btn-outline-primary" onclick="history.back();">Back to results</button>
             </div>
         </div>
-        <isif condition="${pdict.attributes.length > 0}">
+        <iscomment> <isif condition="${pdict.attributes.length > 0}">
             <isinclude template="product/compareAttributes"/>
-        <iselse>
+        <iselse> </iscomment>
             <div class="row">
                 <isloop items="${pdict.pids}" var="productId">
                     <div class="col">
@@ -29,7 +28,7 @@
                     </div>
                 </isloop>
             </div>
-        </isif>
+        <iscomment> </isif> </iscomment>
         <isset scope="request" name="pids" value="${pdict.pids}">
     </div>
 
