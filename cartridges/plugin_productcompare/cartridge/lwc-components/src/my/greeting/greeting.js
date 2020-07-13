@@ -1,10 +1,26 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { useQuery } from '@lwce/apollo-client';
 import QUERY from './graphQL';
-//import HashMap from 'dw/util/HashMap';
+import {cgidNames} from './graphQL.js';
+
 export default class Greeting extends LightningElement {
 
     isBundle = false;
+    cgidVal;
+    attributes;
+    pidvalL;
+
+        @api
+    set cgid(val){
+        console.log("inside set cgid, val: ",val);
+        this.queryAttr(val);
+        this.cgidVal = val;
+
+    }
+
+    get cgid(){
+        return this.cgidVal;
+    }
 
     @api
     set pid(val) {
@@ -16,8 +32,6 @@ export default class Greeting extends LightningElement {
     get pid() {
         return this.variables.pidList;
     }
-
-    attributes = ["name","price","shortDescription", "variants"];
 
     strToArr(val){
         console.log("inside strToArr function" );
@@ -33,8 +47,8 @@ export default class Greeting extends LightningElement {
                 }
             }
             console.log("inside strToArr pidList: ",pidList[1]);
+            this.pidvalL = pidList;
             return pidList;
-            //this.pidList( this.pidList);
         };
 
         async  connectedCallback() {
@@ -62,48 +76,78 @@ export default class Greeting extends LightningElement {
         return this.results.loading ? "" : this.results.data.multipleProducts;
        }
     }
-    productArr(){
-        var multiProd = this.results.data.multipleProducts;
-        for(var i=0; i< multiProd.length; i++){
-        }
 
+    queryAttr(val){
+      var arr = [];
+    Object.values(cgidNames).forEach(key => {arr.push(key)});
+    for (var i=0; i<arr.length; i++) {
+        for (var key in arr[i]){
+            if (arr[i].hasOwnProperty(key)) {
+                var strKey = '"'+key+'"';
+                if (val== strKey ) {
+                    this.attributes = arr[i][key];
+                }
     }
+    }
+}
+     }
+
     get drawTable(){
-        var multiProd = this.results.data.multipleProducts;
+        this.queryAttr(this.cgidVal);
+        var multiProd = this.results.data.productDetail;
+        //this.attributes = ['director','title','releaseDate','id','isPublished','updatedAt','createdAt','episodeId'];
+        console.log("results data: ",this.results.data);
+        console.log("inside drawTable, val of attributes:",this.attributes);
         var totalRows = this.attributes.length;
-        var cellsInRow = (multiProd.length);
+        var cellsInRow = (multiProd.length+1);
         var div1 = document.getElementById("div1");
+        var width = 100/(multiProd.length + 1);
         console.log("div1",div1);
-            var tbl = document.createElement("table");
-            tbl.style = "width: 100%;border-collapse:collapse;border: 2px solid black;";
-           //tbl.setAttribute("class", "democlass");
-            console.log("tbl",tbl);
-            for (var r = 0; r < totalRows; r++)  {
+
+            var tbl = document.createElement("table");  //table
+            tbl.classList.add("table-striped-column");
+
+            for (var r = 0; r < totalRows; r++)  { //rows
                 var row = document.createElement("tr");
-                row.style = "border: 1px solid black;";
-                var cell = document.createElement("td");
-                var cellText = document.createTextNode(this.attributes[r]);
-                cell.style = "border: 1px solid black;width:50px;height:50px;text-align:center;";
-                cell.appendChild(cellText);
-                row.appendChild(cell);
-            for (var c = 1; c <= cellsInRow; c++) {
-                var v = c-1;
-                var map = new Map();
-                let obj = multiProd[v];
-                Object.keys(obj).forEach(key => {map.set(key, obj[key]);});
-                    console.log("inside drawtable");
+                var colgroup = document.createElement("div");
+                colgroup.style= "width:${"+(100/(multiProd.length))+"}%";
+                var isEligible = true;
+            for (var c = 0; c < cellsInRow; c++) { //columns
+                if(r==0){
+                    var cellImg = document.createElement("td");
+                    if(c > 0){
+                console.log("Image link:",multiProd[c-1].imageGroups[0].images[0].disBaseLink);
+                }}
+                else if(c==0){
                     var cell = document.createElement("td");
-                    cell.style = "border: 1px solid black;width:100px;height:50px;text-align:center;";
-                        var name = this.attributes[r];
-                        console.log("val of name: ",name);
-                        console.log("val of map.get(string): ",map.get(name));
-                        var cellText = document.createTextNode(map.get(name));
+                    cell.style = "width:${"+width+"}%";
+                    if(r != 0){var cellText = document.createTextNode(this.attributes[r]);}
                     cell.appendChild(cellText);
                     row.appendChild(cell);
+                    console.log("in line");
                 }
-
+                else{var v = c-1;
+                    var map = new Map();
+                    let obj = multiProd[v];
+                    Object.keys(obj).forEach(key => {map.set(key, obj[key]);});
+                        var cell = document.createElement("td");
+                        cell.style = "width:${"+width+"}%";
+                            var name = this.attributes[r];
+                            if((map.get(name) != undefined) && (map.get(name) != null)){
+                                var cellText = document.createTextNode(map.get(name));
+                                cell.appendChild(cellText);
+                                colgroup.appendChild(cell);
+                            }else{
+                                isEligible = false;
+                            }
+}
+                }
+if(isEligible){
+    console.log("inside isEligible, tbl: ",tbl);
+    row.appendChild(colgroup);
+}
       tbl.appendChild(row); // add the row to the end of the table body
-            }
+}
     div1.appendChild(tbl); // appends <table> into <div1>
     }
 }

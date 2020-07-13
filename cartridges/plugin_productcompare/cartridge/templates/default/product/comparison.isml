@@ -18,9 +18,9 @@
                 <button class="btn btn-outline-primary" onclick="history.back();">Back to results</button>
             </div>
         </div>
-        <iscomment> <isif condition="${pdict.attributes.length > 0}">
+         <isif condition="${pdict.attributes.length > 0}">
             <isinclude template="product/compareAttributes"/>
-        <iselse> </iscomment>
+        <iselse>
             <div class="row">
                 <isloop items="${pdict.pids}" var="productId">
                     <div class="col">
@@ -28,7 +28,7 @@
                     </div>
                 </isloop>
             </div>
-        <iscomment> </isif> </iscomment>
+        </isif>
         <isset scope="request" name="pids" value="${pdict.pids}">
     </div>
 
@@ -48,6 +48,7 @@
             var container = document.getElementById('hello-world');
             var element = createLwcComponent('my-greeting');
             element.pid = '${pdict.pids}';
+            element.cgid = '${pdict.cgid}';
             container.appendChild(element);
         });
     </script>

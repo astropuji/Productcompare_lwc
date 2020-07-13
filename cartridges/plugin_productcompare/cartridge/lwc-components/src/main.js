@@ -17,8 +17,10 @@ import {
 import { setClient } from '@lwce/apollo-client';
 
 const httpLink = new HttpLink({
-    uri: 'https://safe-brushlands-35946.herokuapp.com//'
+    //uri: 'https://intern-bff.herokuapp.com/'
+    uri:'https://intern-bff.herokuapp.com/'
 });
+
 
 const authLink = new ApolloLink((operation, forward) => {
     // Call the next link in the middleware chain.

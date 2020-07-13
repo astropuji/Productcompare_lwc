@@ -9,6 +9,8 @@ var isCompat = require('./../util/lwcCompat');
 
 server.get('Show', cache.applyDefaultCache, function (req, res, next) {
     var compareProductsForm = req.querystring;
+   // console.log("cgid value in Compare.js: ",compareProductsForm.cgid);
+    var cgid = compareProductsForm.cgid;
     var category = CatalogMgr.getCategory(compareProductsForm.cgid);
     var pids = Object.keys(compareProductsForm)
         .filter(function (key) { return key.indexOf('pid') === 0; })
@@ -23,13 +25,14 @@ server.get('Show', cache.applyDefaultCache, function (req, res, next) {
             imgUrl: category.image ? category.image.url.toString() : null
         },
         pids: pids,
+        cgid: cgid,
         attributes: (new CompareAttributesModel(products)).slice(0)
     });
     var lwcCompat = isCompat();
 
     // Render as a Web Component
 if (false && !lwcCompat) {
-        // Full web component rendering
+    // Full web component rendering
     res.render('/hello/helloWorld-wc');
     next();
     return;
