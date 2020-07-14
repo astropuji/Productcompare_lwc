@@ -116,7 +116,12 @@ export default class Greeting extends LightningElement {
                 if(r==0){
                     var cellImg = document.createElement("td");
                     if(c > 0){
-                console.log("Image link:",multiProd[c-1].imageGroups[0].images[0].disBaseLink);
+                        var link = multiProd[c-1].imageGroups[0].images[0].disBaseLink;
+                console.log("Image link:",);
+                var img = document.createElement("img");
+                img.src = link;
+                cellImg.appendChild(img);
+                row.appendChild(cellImg);
                 }}
                 else if(c==0){
                     var cell = document.createElement("td");
